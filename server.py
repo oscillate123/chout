@@ -19,6 +19,7 @@ list_of_sockets = [server_socket]
 adresses = {}
 
 
+
 def receive(client, address):
 
     main_flag = True
