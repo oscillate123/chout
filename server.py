@@ -43,7 +43,7 @@ def receive(client, address):
             for each in list_of_sockets:
                 each.close()
             main_flag = False
-        except ConnectionError or ConnectionResetError:
+        except ConnectionResetError:
             Thread(target=broadcast,
                    args=(f'{address} disconnected'.encode(UTF8),),
                    daemon=True).start()
