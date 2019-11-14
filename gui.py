@@ -13,7 +13,7 @@ connections = ['racso', 'mercur', 'hyperX', '127.0.0.1']
 
 busy_nums = []
 
-# RANDOM VARIABLES
+# FUNCTIONS
 def random_name():
     ran = random.randint(1, 1000)
     if ran not in busy_nums:
@@ -23,8 +23,11 @@ def random_name():
         random_name()
 
 
-# POSITION GROUPS
+def update_inputs():
+    app.addListItem(title='chatbox', item='Test', select=False)
 
+
+# POSITION GROUPS
 x_0 = 0
 x_1 = 1
 x_2 = 2
@@ -84,11 +87,25 @@ app.addListBox(name='connected',
                column=y_7,
                rowspan=5)
 
-# BODY CONTENT BELOW ROW 1
+
+# BODY CONTENT BELOW ROW 5
+app.addButton("Send", update_inputs, row=x_6, column=y_1, colspan=2)
 app.addLabel(f'{random_name()}', 'X6', row=x_6, column=y_0)
 app.addLabel(f'{random_name()}', 'X7', row=x_7, column=y_0)
 app.addLabel(f'{random_name()}', 'X8', row=x_8, column=y_0)
 
-app.addListItem(title='chatbox', item='Test', select=False)
 
 app.go()
+
+
+
+
+
+
+
+
+
+
+
+
+
