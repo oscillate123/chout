@@ -9,6 +9,7 @@ BUFF = 4096
 UTF8 = 'utf-8'
 
 client_socket = socket.socket(AF_INET, SOCK_STREAM)
+username = input("what is your username? ")
 
 
 def receive(client):
@@ -45,6 +46,7 @@ def send(client):
 
 def run_program():
     client_socket.connect((HOST, PORT))
+    client_socket.send(bytes(f"username#{username}"))
 
     try:
         read_thread = Thread(target=receive, args=(client_socket,), daemon=True)
