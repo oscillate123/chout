@@ -3,7 +3,7 @@ from appJar import gui
 
 app = gui()
 
-busy_nums = []
+
 
 IP = '127.0.0.1'
 PORT = 6663
@@ -11,6 +11,7 @@ SERVER_INFO = 'You successfully connected to: ' + IP + ':' + str(PORT)
 
 connections = ['racso', 'mercur', 'hyperX', '127.0.0.1']
 
+busy_nums = []
 
 # RANDOM VARIABLES
 def random_name():
@@ -91,7 +92,3 @@ app.addLabel(f'{random_name()}', 'X8', row=x_8, column=y_0)
 app.addListItem(title='chatbox', item='Test', select=False)
 
 app.go()
-
-
-if __name__ == "__main__":
-    print()
