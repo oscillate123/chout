@@ -1,12 +1,13 @@
-def removeNames(message):
+def findRecievers(message):
     recievers = []
-    strippedMessage = []
     word_list = message.split(" ")
     for word in word_list:
         if word[0] == "@":
             recievers.append(word[1:])
-        strippedMessage.append(word)
-    print(f"Recievers: {recievers}")
-    print(f"Message: {' '.join(strippedMessage)}")
+    return recievers
 
-removeNames(input("Enter message: "))
+
+message = input("Enter message: ")
+recievers = findRecievers(message)
+print(f"Recievers: {recievers}")
+print(f"message: {message}")
