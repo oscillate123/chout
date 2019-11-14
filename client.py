@@ -3,14 +3,6 @@ import time
 from socket import AF_INET, SOCK_STREAM
 from threading import Thread
 
-HOST = '127.0.0.1'
-PORT = 6663
-BUFF = 4096
-UTF8 = 'utf-8'
-
-client_socket = socket.socket(AF_INET, SOCK_STREAM)
-username = input("what is your username? ")
-
 
 def receive(client):
     while True:
@@ -46,7 +38,7 @@ def send(client):
 
 def run_program():
     client_socket.connect((HOST, PORT))
-    client_socket.send(bytes(f"username#{username}"))
+    client_socket.send(f"username#{username}".encode(UTF8))
 
     try:
         read_thread = Thread(target=receive, args=(client_socket,), daemon=True)
@@ -59,6 +51,14 @@ def run_program():
 
     except KeyboardInterrupt as e:
         print('CLIENT CLOSED main', str(e))
+
+HOST = '127.0.0.1'
+PORT = 6663
+BUFF = 4096
+UTF8 = 'utf-8'
+
+client_socket = socket.socket(AF_INET, SOCK_STREAM)
+username = input("what is your username? ")
 
 
 if __name__ == "__main__":
