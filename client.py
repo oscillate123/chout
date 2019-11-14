@@ -46,7 +46,7 @@ def send(client):
 
 def run_program():
     client_socket.connect((HOST, PORT))
-    client_socket.send(bytes(f"username#{username}"))
+    client_socket.send(f"username#{username}".encode())
 
     try:
         read_thread = Thread(target=receive, args=(client_socket,), daemon=True)
