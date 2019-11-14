@@ -9,7 +9,7 @@ IP = '127.0.0.1'
 PORT = 6663
 SERVER_INFO = 'You successfully connected to: ' + IP + ':' + str(PORT)
 
-connections = ['racso', 'mercur', 'hyperX', '127.0.0.1']
+connections = ['  ## CONNECTIONS ##', 'racso', 'mercur', 'hyperX', '127.0.0.1']
 
 busy_nums = []
 
@@ -51,60 +51,37 @@ y_9 = 9
 y_10 = 10
 
 # BODY SETTINGS
-# app.setSize(y, x)
-app.setSize(700, 500)
+# app.setSize(x, y)
+app.setSize(600, 400)
 app.setFont(14)
 app.setBg('LightGrey')
 app.setTransparency(97)
 
-# BODY CONTENT ROW 0 #X_0
-app.addLabel(f'{random_name()}', 'col 0', row=x_0, column=y_0)
-app.addLabel(f'{random_name()}', 'column 1', row=x_0, column=y_1)
-app.addLabel(f'{random_name()}', 'column 2', row=x_0, column=y_2)
-app.addLabel(f'{random_name()}', 'column 3', row=x_0, column=y_3)
-app.addLabel(f'{random_name()}', 'column 4', row=x_0, column=y_4)
-app.addLabel(f'{random_name()}', 'column 5', row=x_0, column=y_5)
-app.addLabel(f'{random_name()}', 'column 6', row=x_0, column=y_6)
-app.addVerticalSeparator(row=x_1, column=y_6, rowspan=7, colour="grey")
-app.addLabel(f'{random_name()}', 'column 7', row=x_0, column=y_7)
-app.addLabel(f'{random_name()}', 'column 7', row=x_0, column=y_8)
 
-# BODY CONTENT ROW 1 #X_1
-app.addLabel(f'{random_name()}', 'X1', row=x_1, column=y_0)
-app.addLabel(f'{random_name()}', 'Connected:', row=x_1, column=y_7)
+for y in range(15):
+    app.addLabel(f'y--x_0_y_{y}', '[]', row=x_0, column=y_0+y)
 
-# BODY CONTENT ROW 2 #X_2
-app.addListBox(name='chatbox',
-               values=[SERVER_INFO],
-               row=x_2,
-               column=y_1,
-               colspan=5,
-               rowspan=4)
-
-app.addListBox(name='connected',
-               values=connections,
-               row=x_2,
-               column=y_7,
-               rowspan=5)
+for x in range(15):
+    app.addLabel(f'x--x_{x}_y_0', '{}', row=x_1+x, column=y_0)
 
 
-# BODY CONTENT BELOW ROW 5
-app.addButton("Send", update_inputs, row=x_6, column=y_1, colspan=2)
-app.addLabel(f'{random_name()}', 'X6', row=x_6, column=y_0)
-app.addLabel(f'{random_name()}', 'X7', row=x_7, column=y_0)
-app.addLabel(f'{random_name()}', 'X8', row=x_8, column=y_0)
+
+
+
+# app.addVerticalSeparator(row=x_0, column=y_5, rowspan=1, colour="grey")
+
+# app.addListBox(name='chatbox',
+#                values=[SERVER_INFO],
+#                row=x_0,
+#                column=y_1,)
+
+# app.addListBox(name='connected',
+#                values=connections,
+#                row=x_0,
+#                column=y_7,)
 
 
 app.go()
-
-
-
-
-
-
-
-
-
 
 
 
