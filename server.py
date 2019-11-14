@@ -5,19 +5,6 @@ import select
 from threading import Thread
 from socket import AF_INET, SOCK_STREAM
 
-HOST = '127.0.0.1'
-PORT = 6663
-BUFF = 4096
-UTF8 = 'utf-8'
-
-server_socket = socket.socket(AF_INET, SOCK_STREAM)
-server_socket.bind((HOST, PORT))
-server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-server_socket.listen(5)
-
-list_of_sockets = [server_socket]
-adresses = {}
-
 
 
 def receive(client, address):
@@ -30,11 +17,17 @@ def receive(client, address):
             time.sleep(0.4)
             if len(data):
                 print(data.decode(UTF8))
-                Thread(target=broadcast,
-                       args=(data, client),
-                       daemon=True).start()
+                tmp = data.decode(UTF8)
+                if '#' in tmp:
+                    if tmp[:9] == 'username#':
+                        users[tmp[9:]] = client
+                else:
+                    Thread(target=broadcast,
+                           args=(data, client),
+                           daemon=True).start()
 
             print(threading.active_count())
+            print(users)
 
         except KeyboardInterrupt as e:
             print('SERVER CLOSED', str(e))
@@ -75,25 +68,41 @@ def broadcast(data, client=None):
         except:
             pass
 
+HOST = '127.0.0.1'
+PORT = 6663
+BUFF = 4096
+UTF8 = 'utf-8'
 
-while True:
-    try:
-        client_object, client_address = server_socket.accept()
-        list_of_sockets.append(client_object)
-        adresses[client_object] = client_address
-        msg = f'{client_address} connected'
-        print(msg)
+server_socket = socket.socket(AF_INET, SOCK_STREAM)
+server_socket.bind((HOST, PORT))
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server_socket.listen(5)
 
-        Thread(target=broadcast,
-               args=(msg.encode(UTF8),),
-               daemon=True).start()
+list_of_sockets = [server_socket]
+users = {}
+adresses = {}
 
-        Thread(target=receive,
-               args=(client_object,
-                     client_address),
-               daemon=True).start()
 
-    except ConnectionAbortedError:
-        pass
-    except TypeError as e:
-        print('error is here', str(e))
+if __name__ == "__main__":
+    while True:
+        try:
+            client_object, client_address = server_socket.accept()
+            list_of_sockets.append(client_object)
+            adresses[client_object] = client_address
+            msg = f'{client_address} connected'
+            print(msg)
+
+            Thread(target=broadcast,
+                args=(msg.encode(UTF8),),
+                daemon=True).start()
+
+            Thread(target=receive,
+                args=(client_object,
+                        client_address),
+                daemon=True).start()
+
+        except ConnectionAbortedError:
+            pass
+        except TypeError as e:
+            print('error is here', str(e))
+#hej
