@@ -12,7 +12,7 @@ HOST = "127.0.0.1"
 PORT = 1234
 UTF8 = 'utf-8'
 
-my_username = input("Username: ")
+my_username = str(input("Username: "))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST,PORT))
 client_socket.setblocking(False)
@@ -23,7 +23,6 @@ client_socket.send(username_header + username)
 client_socket.setblocking(1)
 
 def receive(client):
-    global HEADER_LENGTH
     while 1:
         time.sleep(0.5)
         try:
@@ -46,11 +45,14 @@ def receive(client):
 def send(client):
     while 1:
         try:
-            message = input(f"{my_username} > ")
+            message = str(input(f"{my_username} > "))
             if message:
                 message = message.encode(UTF8)
                 message_header = f"{len(message):<{HEADER_LENGTH}}".encode(UTF8)
                 client.send(message_header + message)
+        except BrokenPipeError as e:
+            print('Lost connection', str(e))
+            client.close()
         except Exception as e:
             print(e)
 

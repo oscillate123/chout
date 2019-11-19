@@ -35,8 +35,13 @@ def findRecievers(message):
     recievers = []
     word_list = message.split(" ")
     for word in word_list:
-        if word[0] == "@":
-            recievers.append(word[1:])
+        try:
+            if word[0] != "@":
+                break
+            else:
+                recievers.append(word[1:])
+        except Exception as e:
+            print(e)
     return recievers
 
 
@@ -86,4 +91,5 @@ if __name__ == "__main__":
         for socket in exception_sockets:
             socketlist.remove(socket)
             del clients[socket]
+        
 
