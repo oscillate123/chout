@@ -3,108 +3,56 @@ from appJar import gui
 
 app = gui()
 
-
-
 IP = '127.0.0.1'
 PORT = 6663
 SERVER_INFO = 'You successfully connected to: ' + IP + ':' + str(PORT)
 
-connections = ['racso', 'mercur', 'hyperX', '127.0.0.1']
-
-busy_nums = []
-
-# FUNCTIONS
-def random_name():
-    ran = random.randint(1, 1000)
-    if ran not in busy_nums:
-        busy_nums.append(ran)
-        return ran
-    else:
-        random_name()
+connections = ['racso', 'mercur', 'hyperX', '127.0.0.1', 'oSCar', 'willepille']
 
 
 def update_inputs():
     app.addListItem(title='chatbox', item='Test', select=False)
 
 
-# POSITION GROUPS
-x_0 = 0
-x_1 = 1
-x_2 = 2
-x_3 = 3
-x_4 = 4
-x_5 = 5
-x_6 = 6
-x_7 = 7
-x_8 = 8
-
-y_0 = 0
-y_1 = 1
-y_2 = 2
-y_3 = 3
-y_4 = 4
-y_5 = 5
-y_6 = 6
-y_7 = 7
-y_8 = 8
-y_9 = 9
-y_10 = 10
-
 # BODY SETTINGS
-# app.setSize(y, x)
-app.setSize(700, 500)
+# app.setSize(x, y)
+app.setSize(600, 600)
 app.setFont(14)
 app.setBg('LightGrey')
-app.setTransparency(97)
+app.setTransparency(99)
 
-# BODY CONTENT ROW 0 #X_0
-app.addLabel(f'{random_name()}', 'col 0', row=x_0, column=y_0)
-app.addLabel(f'{random_name()}', 'column 1', row=x_0, column=y_1)
-app.addLabel(f'{random_name()}', 'column 2', row=x_0, column=y_2)
-app.addLabel(f'{random_name()}', 'column 3', row=x_0, column=y_3)
-app.addLabel(f'{random_name()}', 'column 4', row=x_0, column=y_4)
-app.addLabel(f'{random_name()}', 'column 5', row=x_0, column=y_5)
-app.addLabel(f'{random_name()}', 'column 6', row=x_0, column=y_6)
-app.addVerticalSeparator(row=x_1, column=y_6, rowspan=7, colour="grey")
-app.addLabel(f'{random_name()}', 'column 7', row=x_0, column=y_7)
-app.addLabel(f'{random_name()}', 'column 7', row=x_0, column=y_8)
 
-# BODY CONTENT ROW 1 #X_1
-app.addLabel(f'{random_name()}', 'X1', row=x_1, column=y_0)
-app.addLabel(f'{random_name()}', 'Connected:', row=x_1, column=y_7)
+# creating 40 columns (y)
+for y in range(40):
+    app.addLabel(f'y--x_0_y_{y}', f'', row=0, column=0+y)
 
-# BODY CONTENT ROW 2 #X_2
+# creating 15 rows (x)
+for x in range(25):
+    app.addLabel(f'x--x_{x}_y_0', f'', row=1+x, column=0)
+
+
+app.addLabel('connected_users', 'CONNECTED', row=4, column=35)
+app.addLabel('chat', 'CHAT', row=4, column=15)
+
+app.addVerticalSeparator(row=2, column=30, rowspan=21, colour="grey")
+
 app.addListBox(name='chatbox',
                values=[SERVER_INFO],
-               row=x_2,
-               column=y_1,
-               colspan=5,
-               rowspan=4)
+               row=6,
+               column=1,
+               rowspan=15,
+               colspan=28)
 
 app.addListBox(name='connected',
                values=connections,
-               row=x_2,
-               column=y_7,
-               rowspan=5)
+               row=6,
+               column=32,
+               rowspan=15,
+               colspan=7)
 
-
-# BODY CONTENT BELOW ROW 5
-app.addButton("Send", update_inputs, row=x_6, column=y_1, colspan=2)
-app.addLabel(f'{random_name()}', 'X6', row=x_6, column=y_0)
-app.addLabel(f'{random_name()}', 'X7', row=x_7, column=y_0)
-app.addLabel(f'{random_name()}', 'X8', row=x_8, column=y_0)
-
+app.addTextArea('message', row=22, column=3, colspan=24, rowspan=1)
 
 app.go()
-
-
-
-
-
-
-
-
-
 
 
 

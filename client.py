@@ -46,6 +46,7 @@ def receive(client):
 def send(client):
     while 1:
         try:
+<<<<<<< HEAD
             message = input(f"{my_username} > ")
             if message:
                 message = message.encode(UTF8)
@@ -54,6 +55,26 @@ def send(client):
         except Exception as e:
             print(e)
 
+=======
+            payload = input('')
+            if len(payload):
+                client.send(payload.encode(UTF8))
+        except BrokenPipeError as e:
+            print('Lost connection', str(e))
+            client.close()
+            retry = input('Do you want to reconnect? y/N')
+            if 'y' in retry:
+                try:
+                    run_program()
+                except:
+                    print('General error, closing.')
+                    main_flag = False
+
+
+def run_program():
+    client_socket.connect((HOST, PORT))
+    client_socket.send(f"username#{username}".encode())
+>>>>>>> f29784504f0ab430c173a618bc519378d851813b
 
 if __name__ == "__main__":
     try:
