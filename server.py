@@ -1,108 +1,89 @@
 import socket
-import time
-import threading
 import select
 from threading import Thread
-from socket import AF_INET, SOCK_STREAM
 
-
-
-def receive(client, address):
-
-    main_flag = True
-
-    while main_flag:
-        try:
-            data = client.recv(BUFF)
-            time.sleep(0.4)
-            if len(data):
-                print(data.decode(UTF8))
-                tmp = data.decode(UTF8)
-                if '#' in tmp:
-                    if tmp[:9] == 'username#':
-                        users[tmp[9:]] = client
-                else:
-                    Thread(target=broadcast,
-                           args=(data, client),
-                           daemon=True).start()
-
-            print(threading.active_count())
-            print(users)
-
-        except KeyboardInterrupt as e:
-            print('SERVER CLOSED', str(e))
-            Thread(target=broadcast,
-                   args=(b'Server closed',),
-                   daemon=True)
-            for each in list_of_sockets:
-                each.close()
-            main_flag = False
-        except ConnectionResetError:
-            Thread(target=broadcast,
-                   args=(f'{address} disconnected'.encode(UTF8),),
-                   daemon=True).start()
-            client.close()
-            list_of_sockets.remove(client)
-            main_flag = False
-
-
-def send(client, data):
-    try:
-        client.send(data)
-    except KeyboardInterrupt as e:
-        print(e)
-
-
-def broadcast(data, client=None):
-    for socket in list_of_sockets:
-        try:
-            if socket != server_socket:
-                if socket != client:
-                    socket.send(data)
-        except BrokenPipeError:
-            msg = f'{adresses[socket]} disconnected'
-            Thread(target=broadcast,
-                   args=(msg.encode(UTF8)),
-                   daemon=True).start()
-            list_of_sockets.remove(client)
-        except:
-            pass
-
-HOST = '127.0.0.1'
-PORT = 6663
-BUFF = 4096
+HEADER_LENGTH = 10
+IP = "127.0.0.1"
+PORT = 1234
 UTF8 = 'utf-8'
 
-server_socket = socket.socket(AF_INET, SOCK_STREAM)
-server_socket.bind((HOST, PORT))
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-server_socket.listen(5)
+server_socket.bind((IP,PORT))
+server_socket.listen()
 
-list_of_sockets = [server_socket]
-users = {}
-adresses = {}
+socketlist = [server_socket]
+
+clients = {}
+
+
+def receive_message(client, client_address=None):
+    try:
+        message_header = client.recv(HEADER_LENGTH)
+
+        if not len(message_header):
+            return False
+
+        message_length = int(message_header.decode(UTF8).strip())
+        return {"header": message_header, "data": client.recv(message_length)}
+
+    except:
+        return False
+
+
+def findRecievers(message):
+    recievers = []
+    word_list = message.split(" ")
+    for word in word_list:
+        if word[0] == "@":
+            recievers.append(word[1:])
+    return recievers
 
 
 if __name__ == "__main__":
     while True:
-        try:
-            client_object, client_address = server_socket.accept()
-            list_of_sockets.append(client_object)
-            adresses[client_object] = client_address
-            msg = f'{client_address} connected'
-            print(msg)
+        read_sockets, _, exception_sockets = select.select(socketlist, [], socketlist)
+        
+        for socket in read_sockets:
+            if socket == server_socket:
+                client_object, client_address = server_socket.accept()
 
-            Thread(target=broadcast,
-                args=(msg.encode(UTF8),),
-                daemon=True).start()
+                user = receive_message(client_object)
+                if user is False:
+                    continue
 
-            Thread(target=receive,
-                args=(client_object,
-                        client_address),
-                daemon=True).start()
+                socketlist.append(client_object)
 
-        except ConnectionAbortedError:
-            pass
-        except TypeError as e:
-            print('error is here', str(e))
-#hej
+                clients[client_object] = user
+                
+                print(f"Accepted new connection from {client_address[0]}:{client_address[1]} username:{user['data'].decode(UTF8)}")
+                
+
+            else:
+                message = receive_message(socket)
+
+                if message is False:
+                    print(f"Closed connection from {clients[socket]['data'].decode(UTF8)}")
+                    socketlist.remove(socket)
+                    del clients[socket]
+                    continue
+
+                user = clients[socket]
+                
+                print(f"Received message from {user['data'].decode(UTF8)}: {message['data'].decode(UTF8)}")
+                
+                receivers = findRecievers(message['data'].decode(UTF8))
+                
+                for client_object in clients:
+
+                    if receivers:
+                        if clients[client_object]['data'].decode(UTF8) in receivers:
+                            client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
+                    else:
+                        if client_object != socket:
+                            client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
+
+        for socket in exception_sockets:
+            socketlist.remove(socket)
+            del clients[socket]
+
