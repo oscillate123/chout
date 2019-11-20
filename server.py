@@ -13,7 +13,6 @@ server_socket.bind((IP,PORT))
 server_socket.listen()
 
 socketlist = [server_socket]
-
 clients = {}
 
 
@@ -91,5 +90,3 @@ if __name__ == "__main__":
         for socket in exception_sockets:
             socketlist.remove(socket)
             del clients[socket]
-        
-

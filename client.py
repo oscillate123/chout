@@ -7,12 +7,11 @@ import time
 
 
 HEADER_LENGTH = 10
-
 HOST = "127.0.0.1"
 PORT = 1234
 UTF8 = 'utf-8'
-
 my_username = str(input("Username: "))
+
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST,PORT))
 client_socket.setblocking(False)
@@ -64,9 +63,7 @@ if __name__ == "__main__":
 
         send_thread = Thread(target=send, args=(client_socket,), daemon=True)
         send_thread.start()
-
         send_thread.join()
-
 
     except IOError as e:
         if e.errno != errno.EAGAIN and e.errno != errno.EWOULDBLOCK:
