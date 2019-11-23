@@ -23,7 +23,6 @@ def click(buttontype):
     else:
         pass
 
-
 # BODY SETTINGS
 # app.setSize(x, y)
 app.setSize(600, 600)
