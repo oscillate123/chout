@@ -92,6 +92,10 @@ def click(buttontype):
     else:
         pass
 
+def enterPress():
+    if app.getFocus() == "message":
+        click("Send")
+
 # BODY SETTINGS
 # app.setSize(x, y)
 app.setSize(600, 600)
@@ -145,7 +149,7 @@ except Exception as e:
     warning_box(f'General error: {str(e)}')
     sys.exit()
 
-
+app.enableEnter(enterPress)
 app.go()
 
 
