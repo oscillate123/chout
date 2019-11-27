@@ -1,14 +1,15 @@
-# def findRecievers(message):
-#     recievers = []
-#     word_list = message.split(" ")
-#     for word in word_list:
-#         if word[0] == "@":
-#             recievers.append(word[1:])
-#     return recievers
+import unittest
+import server
+from server import findRecievers
 
+class TestStringMethods(unittest.TestCase):
 
-# message = input("Enter message: ")
-# recievers = findRecievers(message)
-# print(f"Recievers: {recievers}")
-# print(f"message: {message}")
+    def test_receivers(self):
+	    msg = "@oscar @wille hejhej"
+	    receivers = findRecievers(msg)
+	    correct = ["oscar", "wille"]
 
+	    self.assertEqual(correct, receivers, msg="findReceivers not working")
+
+if __name__ == '__main__':
+    unittest.main()

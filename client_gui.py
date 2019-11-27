@@ -65,7 +65,7 @@ def send(client, message):
             warning_box(f'General error: {e}')
 
 def message_polishing(who, what):
-    return f' {who}:\n   {what}'
+    return f' {who}:  {what}'
 
 def warning_box(text):
     app.warningBox(title='temp_warning', message=f'Error!\n{text}')
