@@ -30,18 +30,18 @@ def receive_message(client, client_address=None):
         return False
 
 
-def findRecievers(message):
-    recievers = []
+def findReceivers(message):
+    receivers = []
     word_list = message.split(" ")
     for word in word_list:
         try:
             if word[0] != "@":
                 break
             else:
-                recievers.append(word[1:])
+                receivers.append(word[1:])
         except Exception as e:
             print(e)
-    return recievers
+    return receivers
 
 
 if __name__ == "__main__":
@@ -76,7 +76,7 @@ if __name__ == "__main__":
                 
                 print(f"Received message from {user['data'].decode(UTF8)}: {message['data'].decode(UTF8)}")
                 
-                receivers = findRecievers(message['data'].decode(UTF8))
+                receivers = findReceivers(message['data'].decode(UTF8))
                 
                 for client_object in clients:
 
