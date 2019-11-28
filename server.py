@@ -30,7 +30,7 @@ def receive_message(client, client_address=None):
         return False
 
 
-def findRecievers(message):
+def findReceivers(message):
     recievers = []
     word_list = message.split(" ")
     for word in word_list:
@@ -76,7 +76,7 @@ if __name__ == "__main__":
                 
                 print(f"Received message from {user['data'].decode(UTF8)}: {message['data'].decode(UTF8)}")
                 
-                receivers = findRecievers(message['data'].decode(UTF8))
+                receivers = findReceivers(message['data'].decode(UTF8))
                 
                 for client_object in clients:
 
