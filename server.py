@@ -65,18 +65,25 @@ if __name__ == "__main__":
             if socket == server_socket:
                 client_object, client_address = server_socket.accept()
 
-                user = receive_message(client_object)
-                if user is False:
+                new_user = receive_message(client_object)
+                if new_user is False:
                     continue
 
                 socketlist.append(client_object)
 
-                clients[client_object] = user
+                clients[client_object] = new_user
                 
-                print(f"Accepted new connection from {client_address[0]}:{client_address[1]} username:{user['data'].decode(UTF8)}")
-                user, message = create_message("##USER_JOINED##", f"{user['data'].decode(UTF8)} joined the server from {client_address[0]}:{client_address[1]}")
-                for client_object in clients:
-                    client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
+                print(f"Accepted new connection from {client_address[0]}:{client_address[1]} username:{new_user['data'].decode(UTF8)}")
+                user, message = create_message("##USER_JOINED##", f"{new_user['data'].decode(UTF8)} joined the server from {client_address[0]}:{client_address[1]}")
+                for client in clients:
+                    client.send(user['header'] + user['data'] + message['header'] + message['data'])
+
+                users.append(new_user['data'].decode(UTF8))
+
+                user, message = create_message("##USER_LIST##", ' '.join(users))
+                client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
+
+                print(f"Current users: {', '.join(users)}")
                 
 
             else:
@@ -85,10 +92,12 @@ if __name__ == "__main__":
                 if message is False:
                     print(f"Closed connection from {clients[socket]['data'].decode(UTF8)}")
                     user, message = create_message("##USER_LEFT##", f"{clients[socket]['data'].decode(UTF8)} left the server")
-                    for client_object in clients:
-                        client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
+                    for client in clients:
+                        client.send(user['header'] + user['data'] + message['header'] + message['data'])
                     socketlist.remove(socket)
+                    users.remove(clients[socket]['data'].decode(UTF8))
                     del clients[socket]
+                    print(f"Current users: {', '.join(users)}")
                     continue
 
                 user = clients[socket]
@@ -97,15 +106,19 @@ if __name__ == "__main__":
                 
                 receivers = findReceivers(message['data'].decode(UTF8))
                 
-                for client_object in clients:
+                for client in clients:
 
                     if receivers:
-                        if clients[client_object]['data'].decode(UTF8) in receivers:
-                            client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
+                        if clients[client]['data'].decode(UTF8) in receivers:
+                            client.send(user['header'] + user['data'] + message['header'] + message['data'])
                     else:
-                        if client_object != socket:
-                            client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
+                        if client != socket:
+                            client.send(user['header'] + user['data'] + message['header'] + message['data'])
 
         for socket in exception_sockets:
             socketlist.remove(socket)
             del clients[socket]
+            try:
+                users.remove(clients[socket]['data'].decode(UTF8))
+            except Exception as e:
+                print(e)

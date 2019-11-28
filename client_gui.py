@@ -40,10 +40,13 @@ def receive(client):
             message_header = client.recv(HEADER_LENGTH)
             message_length = int(message_header.decode(UTF8).strip())
             message = client.recv(message_length).decode(UTF8)
+            
 
             if username == "##USER_JOINED##":
                 username = "HOST"
                 new_user = message.split()[0]
+                if new_user == my_username:
+                    continue
                 users.append(new_user)
                 app.clearListBox("connected")
                 app.addListItems("connected", users)
@@ -53,6 +56,15 @@ def receive(client):
                 users.remove(user_leaving)
                 app.clearListBox("connected")
                 app.addListItems("connected", users)
+            if username == "##USER_LIST##":
+                username = "HOST"
+                message = message.split()
+                for word in message:
+                    users.append(word)
+                app.clearListBox("connected")
+                app.addListItems("connected", users)
+                continue
+                
 
             # updates GUI
             update_inputs(f'{message_polishing(who=username, what=message)}')
