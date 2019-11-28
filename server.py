@@ -4,7 +4,7 @@ from threading import Thread
 
 HEADER_LENGTH = 10
 IP = "127.0.0.1"
-PORT = 1234
+PORT = 65432
 UTF8 = 'utf-8'
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
