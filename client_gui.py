@@ -9,7 +9,7 @@ app = gui()
 
 HEADER_LENGTH = 10
 HOST = "127.0.0.1"
-PORT = 1234
+PORT = 65432
 UTF8 = 'utf-8'
 my_username = input("Username: ")
 
@@ -50,7 +50,7 @@ def receive(client):
                 users.append(new_user)
                 app.clearListBox("connected")
                 app.addListItems("connected", users)
-            if username == "##USER_LEFT##":
+            elif username == "##USER_LEFT##":
                 username = "HOST"
                 user_leaving = message.split()[0]
                 users.remove(user_leaving)
@@ -65,6 +65,8 @@ def receive(client):
                 app.addListItems("connected", users)
                 continue
                 
+            else:
+                pass
 
             # updates GUI
             update_inputs(f'{message_polishing(who=username, what=message)}')
@@ -91,7 +93,7 @@ def send(client, message):
             warning_box(f'General error: {e}')
 
 def message_polishing(who, what):
-    return f' {who}:\n   {what}'
+    return f' {who}:  {what}'
 
 def warning_box(text):
     app.warningBox(title='temp_warning', message=f'Error!\n{text}')
@@ -112,9 +114,7 @@ def click(buttontype):
         app.clearListBox(title='chatbox', callFunction=False)
     elif buttontype == 'Disconnect':
         client_socket.close()
-        app.close()
         sys.exit()
-        exit()
     else:
         pass
 
