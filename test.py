@@ -34,18 +34,3 @@ class TestFunctions(unittest.TestCase):
 
 if __name__ == '__main__':
 	unittest.main()
-
-
-# {'header': b'15        ', 'data': b'##USER_JOINED##'} 
-# {'header': b'44        ', 'data': b'wille joined the server from 127.0.0.1:37514'}
-
-# def create_message(user, message):
-#     user_data = user.encode(UTF8)
-#     user_header = f"{len(user):<{HEADER_LENGTH}}".encode(UTF8)
-#     user = {"header": user_header, "data": user_data}
-
-#     message_data = message.encode(UTF8)
-#     message_header = f"{len(message):<{HEADER_LENGTH}}".encode(UTF8)
-#     message = {"header": message_header, "data": message_data}
-
-#     return user, message
