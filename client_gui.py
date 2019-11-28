@@ -56,7 +56,7 @@ def receive(client):
                 users.remove(user_leaving)
                 app.clearListBox("connected")
                 app.addListItems("connected", users)
-            if username == "##USER_LIST##":
+            elif username == "##USER_LIST##":
                 username = "HOST"
                 message = message.split()
                 for word in message:
