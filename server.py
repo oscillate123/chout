@@ -14,6 +14,19 @@ server_socket.listen()
 
 socketlist = [server_socket]
 clients = {}
+users = []
+
+
+def create_message(user, message):
+    user_data = user.encode(UTF8)
+    user_header = f"{len(user):<{HEADER_LENGTH}}".encode(UTF8)
+    user = {"header": user_header, "data": user_data}
+
+    message_data = message.encode(UTF8)
+    message_header = f"{len(message):<{HEADER_LENGTH}}".encode(UTF8)
+    message = {"header": message_header, "data": message_data}
+
+    return user, message
 
 
 def receive_message(client, client_address=None):
@@ -61,6 +74,9 @@ if __name__ == "__main__":
                 clients[client_object] = user
                 
                 print(f"Accepted new connection from {client_address[0]}:{client_address[1]} username:{user['data'].decode(UTF8)}")
+                user, message = create_message("##USER_JOINED##", f"{user['data'].decode(UTF8)} joined the server from {client_address[0]}:{client_address[1]}")
+                for client_object in clients:
+                    client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
                 
 
             else:
@@ -68,6 +84,9 @@ if __name__ == "__main__":
 
                 if message is False:
                     print(f"Closed connection from {clients[socket]['data'].decode(UTF8)}")
+                    user, message = create_message("##USER_LEFT##", f"{clients[socket]['data'].decode(UTF8)} left the server")
+                    for client_object in clients:
+                        client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
                     socketlist.remove(socket)
                     del clients[socket]
                     continue

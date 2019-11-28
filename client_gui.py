@@ -23,6 +23,7 @@ username_header = f"{len(username):<{HEADER_LENGTH}}".encode(UTF8)
 client_socket.send(username_header + username)
 client_socket.setblocking(1)
 
+users = []
 
 def receive(client):
     main_flag = True
@@ -39,6 +40,19 @@ def receive(client):
             message_header = client.recv(HEADER_LENGTH)
             message_length = int(message_header.decode(UTF8).strip())
             message = client.recv(message_length).decode(UTF8)
+
+            if username == "##USER_JOINED##":
+                username = "HOST"
+                new_user = message.split()[0]
+                users.append(new_user)
+                app.clearListBox("connected")
+                app.addListItems("connected", users)
+            if username == "##USER_LEFT##":
+                username = "HOST"
+                user_leaving = message.split()[0]
+                users.remove(user_leaving)
+                app.clearListBox("connected")
+                app.addListItems("connected", users)
 
             # updates GUI
             update_inputs(f'{message_polishing(who=username, what=message)}')
@@ -125,7 +139,7 @@ app.addListBox(name='chatbox',
                colspan=28)
 
 app.addListBox(name='connected',
-               values=['Empty ATM'],
+               values=users,
                row=6,
                column=32,
                rowspan=15,
