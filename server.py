@@ -64,27 +64,21 @@ if __name__ == "__main__":
         for socket in read_sockets:
             if socket == server_socket:
                 client_object, client_address = server_socket.accept()
-
                 new_user = receive_message(client_object)
                 if new_user is False:
                     continue
-
                 socketlist.append(client_object)
-
                 clients[client_object] = new_user
                 
                 print(f"Accepted new connection from {client_address[0]}:{client_address[1]} username:{new_user['data'].decode(UTF8)}")
+                users.append(new_user['data'].decode(UTF8))
+                print(f"Current users: {', '.join(users)}")
                 user, message = create_message("##USER_JOINED##", f"{new_user['data'].decode(UTF8)} joined the server from {client_address[0]}:{client_address[1]}")
                 for client in clients:
                     client.send(user['header'] + user['data'] + message['header'] + message['data'])
 
-                users.append(new_user['data'].decode(UTF8))
-
                 user, message = create_message("##USER_LIST##", ' '.join(users))
                 client_object.send(user['header'] + user['data'] + message['header'] + message['data'])
-
-                print(f"Current users: {', '.join(users)}")
-                
 
             else:
                 message = receive_message(socket)
@@ -92,22 +86,21 @@ if __name__ == "__main__":
                 if message is False:
                     print(f"Closed connection from {clients[socket]['data'].decode(UTF8)}")
                     user, message = create_message("##USER_LEFT##", f"{clients[socket]['data'].decode(UTF8)} left the server")
-                    for client in clients:
-                        client.send(user['header'] + user['data'] + message['header'] + message['data'])
+
                     socketlist.remove(socket)
                     users.remove(clients[socket]['data'].decode(UTF8))
                     del clients[socket]
+
+                    for client in clients:
+                        client.send(user['header'] + user['data'] + message['header'] + message['data'])
                     print(f"Current users: {', '.join(users)}")
                     continue
 
                 user = clients[socket]
-                
                 print(f"Received message from {user['data'].decode(UTF8)}: {message['data'].decode(UTF8)}")
-                
                 receivers = findReceivers(message['data'].decode(UTF8))
                 
                 for client in clients:
-
                     if receivers:
                         if clients[client]['data'].decode(UTF8) in receivers:
                             client.send(user['header'] + user['data'] + message['header'] + message['data'])
