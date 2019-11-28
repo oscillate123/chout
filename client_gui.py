@@ -8,8 +8,8 @@ from appJar import gui
 app = gui()
 
 HEADER_LENGTH = 10
-HOST = "127.0.0.1"
-PORT = 1234
+HOST = "172.20.202.132"
+PORT = 65432
 UTF8 = 'utf-8'
 my_username = input("Username: ")
 
@@ -79,7 +79,7 @@ def send(client, message):
             warning_box(f'General error: {e}')
 
 def message_polishing(who, what):
-    return f' {who}:\n   {what}'
+    return f' {who}:  {what}'
 
 def warning_box(text):
     app.warningBox(title='temp_warning', message=f'Error!\n{text}')
@@ -102,7 +102,6 @@ def click(buttontype):
         client_socket.close()
         app.close()
         sys.exit()
-        exit()
     else:
         pass
 
