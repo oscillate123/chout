@@ -44,11 +44,7 @@ def receive_message(client, client_address=None):
 
 
 def findReceivers(message):
-<<<<<<< HEAD
     receivers = []
-=======
-    recievers = []
->>>>>>> branch_oscillate
     word_list = message.split(" ")
     for word in word_list:
         try:
